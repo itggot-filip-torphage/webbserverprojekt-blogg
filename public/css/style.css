@@ -1,0 +1,38 @@
+body {
+    margin: 0px;
+}
+
+.container {
+    display: grid;
+    grid-template-rows: 25vh auto 20vh;
+}
+
+header {
+    display: grid;
+    grid-row: span;
+    height: 25vh;
+    background-color: lightgray;
+}
+
+main {
+    display: grid;
+    grid-row: span;
+    margin-left: 10vw;
+    margin-right: 10vw;
+}
+
+article {
+    background-color: bisque;
+}
+
+footer {
+    display: grid;
+    grid-row: span;
+    height: 20vh;
+    background-color: gray;
+}
+
+header, footer p {
+    font-size: 48px;
+    text-align: center;
+}
