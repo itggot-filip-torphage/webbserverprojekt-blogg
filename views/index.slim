@@ -1,0 +1,12 @@
+.wrapper
+    - if defined? posts
+        - posts.each do |post|
+            article
+                - if post["pic"] != nil
+                    .pic
+                        img src="/img/#{post["pic"]}" alt="pic"
+                .content
+                    p = post["content"]
+                .author
+                    p = post["author"]
+            br
