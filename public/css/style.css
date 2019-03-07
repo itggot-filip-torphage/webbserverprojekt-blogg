@@ -4,17 +4,35 @@ body {
 
 .container {
     display: grid;
-    grid-template-rows: 25vh auto 20vh;
+    grid-template-rows: auto;
 }
 
 header {
+    position: absolute;
     display: grid;
-    grid-row: span;
+    grid-template-columns: repeat(5, 1fr);
     height: 25vh;
+    width: 100vw;
     background-color: lightgray;
 }
 
+header .title {
+    display: grid;
+    grid-column: 2 / 5;
+    font-size: 48px;
+    text-align: center;
+}
+
+header .profile-box {
+    display: grid;
+    grid-column: 5 / 6;
+    align-content: center;
+}
+
 main {
+    height: 55vh;
+    position: absolute;
+    margin-top: 25vh;
     display: grid;
     grid-row: span;
     margin-left: 10vw;
@@ -26,13 +44,15 @@ article {
 }
 
 footer {
-    display: grid;
-    grid-row: span;
     height: 20vh;
+    width: 100vw;
+    bottom: 0%;
     background-color: gray;
+    position: absolute;
 }
 
-header, footer p {
+footer p {
     font-size: 48px;
     text-align: center;
+    margin: 0px;
 }
