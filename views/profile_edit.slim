@@ -1,0 +1,9 @@
+main
+    .wrapper
+        form action="/profile/#{user["id"]}/edit" method="post"
+            input type="hidden" name="Username" value=user["username"]
+            input type="text" name="Password"
+            input type="text" name="Pic" value=user["pic"]
+            input type="submit" value="Submit"
+footer
+    p text

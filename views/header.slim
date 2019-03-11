@@ -1,10 +1,17 @@
 header
     .title
-        p My Blog
+        a href="/"
+            p My Blog
     .profile-box
-        .login
-            a href="/login"
-                input type="button" value="Login"
-        .sign-up
-            a href="/signup"
-                input type="button" value="Sign Up"
+        - if session.key?("user_id")
+            a href="/profile/#{session["user_id"]}"
+                input type="button" value="Profile"
+            a href="/profile/#{session["user_id"]}/edit"
+                input type="button" value="Edit"
+        - else
+            .login
+                a href="/login"
+                    input type="button" value="Login"
+            .sign-up
+                a href="/signup"
+                    input type="button" value="Sign Up"

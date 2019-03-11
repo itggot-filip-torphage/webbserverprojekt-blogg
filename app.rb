@@ -11,7 +11,7 @@ get('/') do
     
     result = db.execute("SELECT * FROM Posts")
     
-    slim(:index, locals:{posts: result})
+    slim(:index, locals:{posts: result, session: session})
 end
 
 get('/login') do
@@ -24,9 +24,13 @@ post('/login') do
     
     result = db.execute("SELECT id, password FROM Users WHERE username=?", [params["Username"]])
 
+    if result.length == 0
+        redirect('/login')
+    end
+
     if BCrypt::Password.new(result[0]["password"]) == params["Password"]
-        session["user"] = params["Username"]
-        redirect('/')        
+        session["user_id"] = result[0]["id"]
+        redirect('/')
     else
         redirect('/login')
     end
@@ -41,15 +45,47 @@ post('/signup') do
     db.results_as_hash = true
     
     result = db.execute("SELECT username FROM Users WHERE username=?", [params["Username"]])
-
+    
     if result.length != 0
         redirect('/signup')
     end
+    
+    hash_password = BCrypt::Password.create(params["Password"])
+    
+    db.execute("INSERT INTO Users (username, password, pic) VALUES (?, ?, '7d1c0004-073e-4fce-a1b5-03c05b936c1f.jpg')", [params["Username"], hash_password])
+    
+    session["user_id"] = params["Username"]
+    redirect('/')        
+end
+
+get('/profile/:id') do
+    db = SQLite3::Database.new("db/blog.db")
+    db.results_as_hash = true
+
+    posts = db.execute("SELECT * FROM Posts WHERE user_id=?", [params["id"]])
+    user_data = db.execute("SELECT * FROM Users WHERE id=?", [params["id"]])
+
+    slim(:profile, locals:{posts: posts, user: user_data[0]})
+end
+
+get('/profile/:id/edit') do
+    db = SQLite3::Database.new("db/blog.db")
+    db.results_as_hash = true
+    
+    result = db.execute("SELECT * FROM Users WHERE id=?", [params["id"]])
+    
+    slim(:profile_edit, locals:{user: result[0]})
+end
+
+post('/profile/:id/edit') do
+    db = SQLite3::Database.new("db/blog.db")
+    db.results_as_hash = true
 
     hash_password = BCrypt::Password.create(params["Password"])
 
-    db.execute("INSERT INTO Users (username, password, pic) VALUES (?, ?, '7d1c0004-073e-4fce-a1b5-03c05b936c1f.jpg')", [params["Username"], hash_password])
-    
-    session["user"] = params["Username"]
-    redirect('/')        
+    result = db.execute("REPLACE INTO Users (id, username, password, pic) VALUES (?, ?, ?, ?)",
+        [params["id"], params["Username"], hash_password, params["Pic"]]
+    )
+
+    redirect("/profile/#{params['id']}")
 end

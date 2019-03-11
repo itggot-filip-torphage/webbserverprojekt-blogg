@@ -1,0 +1,18 @@
+main
+    .wrapper
+        .profile
+            img src="/img/#{user["pic"]}" alt="pic"
+            h1 = user["username"]
+            .colors
+                a style="background-color: lightgray" href="#" onclick="setColor('lightgray');"
+                    .box
+                a style="background-color: green" href="#" onclick="setColor('green');"
+                    .box
+                a style="background-color: blue" href="#" onclick="setColor('blue');"
+                    .box
+                a style="background-color: red" href="#" onclick="setColor('red');"
+                    .box
+        .posts
+            == slim(:posts, locals:{posts: posts})
+footer
+    p text

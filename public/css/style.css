@@ -39,8 +39,80 @@ main {
     margin-right: 10vw;
 }
 
+.wrapper {
+    display: grid;
+    grid-template-rows: 25vh auto;
+}
+
+.profile {
+    display: grid;
+    grid-row: span 1;
+    grid-template-columns: repeat(5, 1fr)
+}
+
+.profile img {
+    display: grid;
+    grid-column: span 1;
+}
+
+.profile h1 {
+    display: grid;
+    grid-column: span 3;
+}
+
+.profile .colors {
+    display: grid;
+    grid-column: span 1;
+    grid-template-rows: repeat(4, 1fr);
+}
+
+.colors a {
+    display: grid;
+    grid-row: span 1;
+    width: 30px;
+    height: 30px;
+}
+
+.posts {
+    display: grid;
+    grid-row: span 1;
+}
+
 article {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
     background-color: bisque;
+    grid-row: span 1;
+    margin-bottom: 20px;
+}
+
+.pic {
+    display: grid;
+    grid-column: span 1;
+    grid-row: span 5;
+}
+
+.content {
+    display: grid;
+    grid-column: 2 / 6;
+    grid-row: 1 / 5;
+}
+
+.content p {
+    text-align: start;
+    vertical-align: 0%;
+}
+
+.author {
+    display: grid;
+    grid-column: 2 / 6;
+    grid-row: 5 / 6;
+}
+
+.author p {
+    text-align: end;
+    margin-right: 5%;
 }
 
 footer {
@@ -48,7 +120,7 @@ footer {
     width: 100vw;
     bottom: 0%;
     background-color: gray;
-    position: absolute;
+    position: fixed;
 }
 
 footer p {
