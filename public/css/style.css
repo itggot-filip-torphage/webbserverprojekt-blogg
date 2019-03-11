@@ -66,7 +66,7 @@ main {
     grid-template-rows: repeat(4, 1fr);
 }
 
-.colors a {
+.colors input {
     display: grid;
     grid-row: span 1;
     width: 30px;

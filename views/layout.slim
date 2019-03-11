@@ -9,5 +9,5 @@ html lang="en"
         title Document
     body 
         .container
-            == slim(:header)
+            == slim(:header, locals:{session: session})
             == yield

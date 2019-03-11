@@ -4,14 +4,13 @@ main
             img src="/img/#{user["pic"]}" alt="pic"
             h1 = user["username"]
             .colors
-                a style="background-color: lightgray" href="#" onclick="setColor('lightgray');"
-                    .box
-                a style="background-color: green" href="#" onclick="setColor('green');"
-                    .box
-                a style="background-color: blue" href="#" onclick="setColor('blue');"
-                    .box
-                a style="background-color: red" href="#" onclick="setColor('red');"
-                    .box
+                form action="/color" method="post"
+                    input type="submit" value="lightgray" style="background-color: lightgray" name="Color"
+                    input type="submit" value="green" style="background-color: green" name="Color"
+                    input type="submit" value="blue" style="background-color: blue" name="Color"
+                    input type="submit" value="red" style="background-color: red" name="Color"
+                    input type="hidden" name="id" value=params["id"]
+                    / input id="color" name="Color" type="hidden"
         .posts
             == slim(:posts, locals:{posts: posts})
 footer

@@ -5,7 +5,14 @@ require 'sqlite3'
 
 enable :sessions
 
+
+post('/color') do
+    session['color'] = params['Color']
+    redirect("/profile/#{params['id']}")
+end
+
 get('/') do
+    session['color'] == 'lightgray'
     db = SQLite3::Database.new("db/blog.db")
     db.results_as_hash = true
     
@@ -65,7 +72,7 @@ get('/profile/:id') do
     posts = db.execute("SELECT * FROM Posts WHERE user_id=?", [params["id"]])
     user_data = db.execute("SELECT * FROM Users WHERE id=?", [params["id"]])
 
-    slim(:profile, locals:{posts: posts, user: user_data[0]})
+    slim(:profile, locals:{posts: posts, user: user_data[0], session: session})
 end
 
 get('/profile/:id/edit') do
