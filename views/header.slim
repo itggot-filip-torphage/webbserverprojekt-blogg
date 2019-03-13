@@ -8,6 +8,8 @@ header style="background-color: #{session['color']}"
                 input type="button" value="Profile"
             a href="/profile/#{session["user_id"]}/edit"
                 input type="button" value="Edit"
+            a href="/new_post"
+                input type="button" value="New Post"
         - else
             .login
                 a href="/login"

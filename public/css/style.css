@@ -31,8 +31,8 @@ header .profile-box {
 
 main {
     height: 55vh;
-    position: absolute;
     margin-top: 25vh;
+    margin-bottom: 20vh;
     display: grid;
     grid-row: span;
     margin-left: 10vw;
@@ -113,18 +113,4 @@ article {
 .author p {
     text-align: end;
     margin-right: 5%;
-}
-
-footer {
-    height: 20vh;
-    width: 100vw;
-    bottom: 0%;
-    background-color: gray;
-    position: fixed;
-}
-
-footer p {
-    font-size: 48px;
-    text-align: center;
-    margin: 0px;
 }

@@ -87,12 +87,34 @@ end
 post('/profile/:id/edit') do
     db = SQLite3::Database.new("db/blog.db")
     db.results_as_hash = true
-
+    
     hash_password = BCrypt::Password.create(params["Password"])
-
+    
     result = db.execute("REPLACE INTO Users (id, username, password, pic) VALUES (?, ?, ?, ?)",
-        [params["id"], params["Username"], hash_password, params["Pic"]]
+    [params["id"], params["Username"], hash_password, params["Pic"]]
     )
-
+    
     redirect("/profile/#{params['id']}")
+end
+
+get('/new_post') do
+    slim(:new_post)
+end
+
+post('/new_post') do
+    db = SQLite3::Database.new("db/blog.db")
+    db.results_as_hash = true
+
+    user_name = db.execute("SELECT username FROM Users WHERE id=?", [session["user_id"]])
+    
+    if params["Pic"].length == 0
+        pic = nil
+    else
+        pic = params["Pic"]
+    end
+    db.execute("INSERT INTO Posts (content, user_id, author, pic) VALUES (?, ?, ?, ?)",
+        [params["Content"], session["user_id"], params["Author"], pic]
+    )
+    
+    redirect('/')
 end
