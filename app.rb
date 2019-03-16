@@ -2,9 +2,24 @@ require 'sinatra'
 require 'slim'
 require 'bcrypt'
 require 'sqlite3'
+require 'securerandom'
 
 enable :sessions
 
+
+def save_pic(params)
+    picture = params["Pic"]
+    if picture.length == 0
+        return
+    end
+    temp_file = picture["tempfile"]
+    path = File.path(temp_file)
+    
+    new_file_name = SecureRandom.uuid
+    FileUtils.copy(path, "./public/uploads/#{new_file_name}")
+
+    return new_file_name
+end
 
 post('/color') do
     session['color'] = params['Color']
@@ -61,7 +76,9 @@ post('/signup') do
     
     db.execute("INSERT INTO Users (username, password, pic) VALUES (?, ?, '7d1c0004-073e-4fce-a1b5-03c05b936c1f.jpg')", [params["Username"], hash_password])
     
-    session["user_id"] = params["Username"]
+    user_id = db.execute("SELECT id FROM Users WHERE username=?", [params["Username"]])
+    
+    session["user_id"] = user_id
     redirect('/')        
 end
 
@@ -105,16 +122,38 @@ post('/new_post') do
     db = SQLite3::Database.new("db/blog.db")
     db.results_as_hash = true
 
+    file_name = save_pic(params)
     user_name = db.execute("SELECT username FROM Users WHERE id=?", [session["user_id"]])
-    
     if params["Pic"].length == 0
         pic = nil
     else
-        pic = params["Pic"]
+        pic = "#{file_name}"
     end
     db.execute("INSERT INTO Posts (content, user_id, author, pic) VALUES (?, ?, ?, ?)",
         [params["Content"], session["user_id"], params["Author"], pic]
     )
     
+    redirect('/')
+end
+
+post('/edit_post/:id') do
+    db = SQLite3::Database.new("db/blog.db")
+    db.results_as_hash = true
+
+    if params["Pic"].length == 0
+        pic = nil
+    else
+        pic = params["Pic"]
+    end
+
+    db.execute("REPLACE INTO Posts (id, content, user_id, author, pic) VALUES (?, ?, ?, ?, ?)",
+        [params["id"], params["Content"], session["user_id"], params["Author"], pic]
+    )
+    
+    redirect('/')
+end
+
+post('/logout') do 
+    session.clear
     redirect('/')
 end

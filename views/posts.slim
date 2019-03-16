@@ -3,10 +3,13 @@
         article
             - if post["pic"] != nil
                 .pic
-                    img src="/img/#{post["pic"]}" alt="pic"
+                    img src="/uploads/#{post["pic"]}" alt="pic"
+                    / p = (img src="/img/#{post["pic"]}" alt="pic").to_s
             .content
                 p = post["content"]
             .author
+                form action="/post/#{post['id']}/edit" method="get"
+                    input type="submit" value="Edit"
                 a href="/profile/#{post["user_id"]}"
                     p = post["author"]
         br

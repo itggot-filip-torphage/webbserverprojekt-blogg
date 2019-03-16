@@ -10,6 +10,9 @@ header style="background-color: #{session['color']}"
                 input type="button" value="Edit"
             a href="/new_post"
                 input type="button" value="New Post"
+            br
+            form action="/logout" method="post"
+                input type="submit" value="Logout"
         - else
             .login
                 a href="/login"
