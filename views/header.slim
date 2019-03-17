@@ -1,12 +1,12 @@
-header style="background-color: #{session['color']}"
+header style="background-color: #{@session['color']}"
     .title
         a href="/"
             p My Blog
     .profile-box
-        - if session.key?("user_id")
-            a href="/profile/#{session["user_id"]}"
+        - if @session.key?("user_id")
+            a href="/profile/#{@session["user_id"]}"
                 input type="button" value="Profile"
-            a href="/profile/#{session["user_id"]}/edit"
+            a href="/profile/#{@session["user_id"]}/edit"
                 input type="button" value="Edit"
             a href="/new_post"
                 input type="button" value="New Post"

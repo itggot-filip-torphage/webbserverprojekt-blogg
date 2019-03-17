@@ -1,12 +1,12 @@
 main
     .wrapper
         article
-            form action="/post/#{post['id']}/edit" method="post"
+            form action="/post/#{@post['id']}/edit" method="post" enctype="multipart/form-data"
                 p Content
-                input type="text" name="Content" value=""
+                input type="text" name="Content" value=@post["content"]
                 br
                 p Author
-                input type="text" name="Author" value=""
+                input type="text" name="Author" value=@post["author"]
                 br
                 p Pic
                 input type="file" accept="image/*" name="Pic" id="Pic"

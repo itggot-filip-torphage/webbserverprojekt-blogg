@@ -1,16 +1,16 @@
 main
     .wrapper
         .profile
-            img src="/img/#{user["pic"]}" alt="pic"
-            h1 = user["username"]
+            img src="/img/#{@user["pic"]}" alt="pic"
+            h1 = @user["username"]
             .colors
                 form action="/color" method="post"
                     input type="submit" value="lightgray" style="background-color: lightgray; color: lightgray" name="Color"
                     input type="submit" value="green" style="background-color: green; color: green" name="Color"
                     input type="submit" value="blue" style="background-color: blue; color: blue" name="Color"
                     input type="submit" value="red" style="background-color: red; color: red" name="Color"
-                    input type="hidden" name="id" value=params["id"]
+                    input type="hidden" name="id" value=@params["id"]
                     / input id="color" name="Color" type="hidden"
         .posts
-            == slim(:posts, locals:{posts: posts})
+            == slim(:posts)
 

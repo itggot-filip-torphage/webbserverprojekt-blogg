@@ -1,7 +1,11 @@
 main
     .wrapper
-        form action="/profile/#{user["id"]}/edit" method="post"
-            input type="hidden" name="Username" value=user["username"]
+        form action="/profile/#{@user["id"]}/edit" method="post" enctype="multipart/form-data"
+            input type="hidden" name="Username" value=@user["username"]
+            label for="Password" Password: 
             input type="text" name="Password"
-            input type="text" name="Pic" value=user["pic"]
+            br
+            label for="Pic" Image: 
+            input type="file" accept="image/*" name="Pic" id="Pic"
+            br
             input type="submit" value="Submit"

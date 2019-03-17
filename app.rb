@@ -31,12 +31,14 @@ get('/') do
     db = SQLite3::Database.new("db/blog.db")
     db.results_as_hash = true
     
-    result = db.execute("SELECT * FROM Posts")
+    @posts = db.execute("SELECT * FROM Posts")
+    @session = session
     
-    slim(:index, locals:{posts: result, session: session})
+    slim(:index)
 end
 
 get('/login') do
+    @session = session
     slim(:login)
 end
 
@@ -59,6 +61,7 @@ post('/login') do
 end
 
 get('/signup') do
+    @session = session
     slim(:signup)
 end
 
@@ -85,20 +88,22 @@ end
 get('/profile/:id') do
     db = SQLite3::Database.new("db/blog.db")
     db.results_as_hash = true
-
-    posts = db.execute("SELECT * FROM Posts WHERE user_id=?", [params["id"]])
-    user_data = db.execute("SELECT * FROM Users WHERE id=?", [params["id"]])
-
-    slim(:profile, locals:{posts: posts, user: user_data[0], session: session})
+    
+    @posts = db.execute("SELECT * FROM Posts WHERE user_id=?", [params["id"]])
+    @user = db.execute("SELECT * FROM Users WHERE id=?", [params["id"]])[0]
+    @session = session
+    
+    slim(:profile)
 end
 
 get('/profile/:id/edit') do
     db = SQLite3::Database.new("db/blog.db")
     db.results_as_hash = true
     
-    result = db.execute("SELECT * FROM Users WHERE id=?", [params["id"]])
+    @user = db.execute("SELECT * FROM Users WHERE id=?", [params["id"]])[0]
+    @session = session
     
-    slim(:profile_edit, locals:{user: result[0]})
+    slim(:profile_edit)
 end
 
 post('/profile/:id/edit') do
@@ -108,52 +113,72 @@ post('/profile/:id/edit') do
     hash_password = BCrypt::Password.create(params["Password"])
     
     result = db.execute("REPLACE INTO Users (id, username, password, pic) VALUES (?, ?, ?, ?)",
-    [params["id"], params["Username"], hash_password, params["Pic"]]
+        [params["id"], params["Username"], hash_password, params["Pic"]]
     )
     
     redirect("/profile/#{params['id']}")
 end
 
 get('/new_post') do
+    @session = session
     slim(:new_post)
 end
 
 post('/new_post') do
     db = SQLite3::Database.new("db/blog.db")
     db.results_as_hash = true
-
+    
     file_name = save_pic(params)
-    user_name = db.execute("SELECT username FROM Users WHERE id=?", [session["user_id"]])
     if params["Pic"].length == 0
         pic = nil
     else
         pic = "#{file_name}"
     end
     db.execute("INSERT INTO Posts (content, user_id, author, pic) VALUES (?, ?, ?, ?)",
-        [params["Content"], session["user_id"], params["Author"], pic]
+    [params["Content"], session["user_id"], params["Author"], pic]
     )
     
     redirect('/')
 end
 
-post('/edit_post/:id') do
+get('/post/:id/edit') do
     db = SQLite3::Database.new("db/blog.db")
     db.results_as_hash = true
+    
+    @post = db.execute("SELECT * FROM Posts WHERE id=?", [params["id"]]).first
+    @session = session
+    
+    slim(:post_edit)
+end
 
+post('/post/:id/edit') do
+    db = SQLite3::Database.new("db/blog.db")
+    db.results_as_hash = true
+    
+    file_name = save_pic(params)
     if params["Pic"].length == 0
         pic = nil
     else
-        pic = params["Pic"]
+        pic = "#{file_name}"
     end
-
+    
     db.execute("REPLACE INTO Posts (id, content, user_id, author, pic) VALUES (?, ?, ?, ?, ?)",
-        [params["id"], params["Content"], session["user_id"], params["Author"], pic]
+    [params["id"], params["Content"], session["user_id"], params["Author"], pic]
     )
+    
+    redirect('/')
+end
+
+post('/post/:id/delete') do
+    db = SQLite3::Database.new("db/blog.db")
+    db.results_as_hash = true
+    
+    db.execute("DELETE FROM Posts WHERE id=?", [params['id']])
     
     redirect('/')
 end
 
 post('/logout') do 
     session.clear
-    redirect('/')
+    redirect(back)
 end
